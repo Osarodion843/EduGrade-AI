@@ -100,6 +100,28 @@ def parse_question_marks(
         ]
 
 
+def init_question_marks(num_questions: int) -> None:
+    """Initialise per-question marks in session state if not present."""
+    if "question_marks_list" not in st.session_state:
+        st.session_state.question_marks_list = [
+            {"question_number": i + 1, "marks": 1.0}
+            for i in range(num_questions)
+        ]
+    else:
+        # Adjust list length to match num_questions
+        current = st.session_state.question_marks_list
+        if len(current) < num_questions:
+            for i in range(len(current), num_questions):
+                current.append(
+                    {"question_number": i + 1, "marks": 1.0}
+                )
+        elif len(current) > num_questions:
+            st.session_state.question_marks_list = current[:num_questions]
+            # Re-number
+            for i, qm in enumerate(st.session_state.question_marks_list):
+                qm["question_number"] = i + 1
+
+
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
@@ -142,18 +164,41 @@ with st.sidebar:
         max_value=100,
         value=5,
         step=1,
-    )
-    marks_input = st.text_input(
-        "Marks per Question",
-        value="2",
-        placeholder="e.g. 2  or  2,3,2,5,3",
-        help=(
-            "Single number (applied to all questions) or comma-separated list "
-            "(one value per question, in order)."
-        ),
+        on_change=lambda: init_question_marks(
+            st.session_state.get("_num_questions", num_questions)
+        )
+        if "_num_questions" in st.session_state
+        else None,
     )
 
-    question_marks = parse_question_marks(num_questions, marks_input)
+    # Sync session state with the widget value
+    st.session_state["_num_questions"] = int(num_questions)
+    init_question_marks(int(num_questions))
+
+    st.caption("Set the maximum marks for each question individually:")
+    question_marks: List[Dict[str, Any]] = []
+    cols_per_row = 3
+    marks_list = st.session_state.question_marks_list
+
+    # Render mark inputs in rows of 3 for compactness
+    for row_start in range(0, len(marks_list), cols_per_row):
+        row_items = marks_list[row_start : row_start + cols_per_row]
+        cols = st.columns(len(row_items))
+        for col, qm in zip(cols, row_items):
+            qn = qm["question_number"]
+            with col:
+                new_marks = st.number_input(
+                    f"Q{qn} marks",
+                    min_value=0.0,
+                    value=float(qm["marks"]),
+                    step=0.5,
+                    key=f"q_{qn}_marks",
+                )
+                qm["marks"] = new_marks
+                question_marks.append(
+                    {"question_number": qn, "marks": new_marks}
+                )
+
     total_marks = sum(qm.get("marks", 0) for qm in question_marks)
     st.info(f"Total maximum score: {total_marks}")
 
