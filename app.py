@@ -1,15 +1,14 @@
 """EduGrade AI – Streamlit frontend.
 
 Paper-to-digital grade assistant for overburdened teachers.
-Upload a photo of a handwritten answer sheet, provide a marking rubric,
-and get an AI-generated grade + constructive feedback powered by Gemma.
+Supports Objective (binary: full marks or zero) and Theory (partial credit)
+exam types with per-question marks and teacher answer-key reference.
 """
 
 from __future__ import annotations
 
-import io
 import json
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 import streamlit as st
 from PIL import Image
@@ -59,6 +58,48 @@ def reset_state() -> None:
     st.session_state.error = None
 
 
+def parse_question_marks(
+    num_questions: int, marks_input: str
+) -> List[Dict[str, Any]]:
+    """Parse the marks-per-question input into a list of dicts.
+
+    Accepts either a single number (applied to all questions) or a
+    comma-separated list (one value per question).
+    """
+    marks_input = marks_input.strip()
+    if not marks_input:
+        # Default: 1 mark per question
+        return [
+            {"question_number": i + 1, "marks": 1.0}
+            for i in range(num_questions)
+        ]
+
+    # Try comma-separated list first
+    parts = [p.strip() for p in marks_input.split(",") if p.strip()]
+    if len(parts) == num_questions:
+        try:
+            return [
+                {"question_number": i + 1, "marks": float(parts[i])}
+                for i in range(num_questions)
+            ]
+        except ValueError:
+            pass
+
+    # Fallback: single value applied to all questions
+    try:
+        single_mark = float(marks_input)
+        return [
+            {"question_number": i + 1, "marks": single_mark}
+            for i in range(num_questions)
+        ]
+    except ValueError:
+        # Last resort: 1 mark per question
+        return [
+            {"question_number": i + 1, "marks": 1.0}
+            for i in range(num_questions)
+        ]
+
+
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
@@ -79,30 +120,73 @@ with st.sidebar:
 
     subject = st.text_input("Subject", placeholder="e.g. Mathematics")
     topic = st.text_input("Topic", placeholder="e.g. Algebra - Linear Equations")
-    max_score = st.number_input(
-        "Maximum Score", min_value=0.0, value=10.0, step=0.5
-    )
 
-    st.divider()
-
-    rubric = st.text_area(
-        "Marking Rubric",
-        height=220,
-        placeholder=(
-            "Paste your marking rubric here. Include expected answers, "
-            "criteria, and score allocation.\n\nExample:\n"
-            "Q1: Solve 2x + 5 = 15. Expected answer: x = 5. (3 pts)\n"
-            "Q2: Define 'photosynthesis'. (2 pts)\n"
-            "Total: 10 pts"
+    # Exam type selector
+    exam_type = st.radio(
+        "Exam Type",
+        options=["objective", "theory"],
+        format_func=lambda x: "Objective (binary)" if x == "objective" else "Theory (partial credit)",
+        help=(
+            "Objective: correct = full marks, incorrect = zero (no partial credit).\n"
+            "Theory: AI awards partial credit based on closeness to marking guide."
         ),
     )
 
     st.divider()
 
-    st.subheader("📚 Teacher Answer Key (Optional)")
+    # Question configuration
+    st.subheader("📋 Question Configuration")
+    num_questions = st.number_input(
+        "Number of Questions",
+        min_value=1,
+        max_value=100,
+        value=5,
+        step=1,
+    )
+    marks_input = st.text_input(
+        "Marks per Question",
+        value="2",
+        placeholder="e.g. 2  or  2,3,2,5,3",
+        help=(
+            "Single number (applied to all questions) or comma-separated list "
+            "(one value per question, in order)."
+        ),
+    )
+
+    question_marks = parse_question_marks(num_questions, marks_input)
+    total_marks = sum(qm.get("marks", 0) for qm in question_marks)
+    st.info(f"Total maximum score: {total_marks}")
+
+    # Show the question/marks breakdown
+    with st.expander("View question marks breakdown", expanded=False):
+        for qm in question_marks:
+            st.write(f"Q{qm['question_number']}: {qm['marks']} mark(s)")
+
+    st.divider()
+
+    rubric = st.text_area(
+        "Marking Rubric / Instructions",
+        height=220,
+        placeholder=(
+            "Describe how each question should be marked.\n\n"
+            "Objective example:\n"
+            "Q1: What is the capital of Nigeria? Answer: Abuja.\n"
+            "Q2: 5 + 7 = ? Answer: 12.\n\n"
+            "Theory example:\n"
+            "Q1: Explain photosynthesis. Award full marks if the student "
+            "mentions light energy, chlorophyll, and CO2.\n"
+            "Q2: Discuss the causes of climate change. Mark based on depth "
+            "and accuracy.\n"
+        ),
+    )
+
+    st.divider()
+
+    # Teacher answer key — now REQUIRED
+    st.subheader("📚 Teacher Answer Key / Marking Guide (Required)")
     st.caption(
-        "Upload your own completed answer sheet image(s). Student papers will "
-        "be graded against these as the authoritative reference."
+        "Upload your own completed answer sheet image(s). The AI will grade "
+        "student papers against these as the authoritative reference."
     )
     teacher_uploads = st.file_uploader(
         "Upload teacher answer sheet(s) (JPEG/PNG)",
@@ -125,9 +209,14 @@ with st.sidebar:
         st.session_state.teacher_images = []
 
     if st.session_state.teacher_images:
-        st.info(
-            f"{len(st.session_state.teacher_images)} teacher answer key "
+        st.success(
+            f"✅ {len(st.session_state.teacher_images)} teacher answer key "
             "image(s) loaded."
+        )
+    else:
+        st.warning(
+            "⚠️ Please upload at least one teacher answer key image before "
+            "evaluating."
         )
 
     st.divider()
@@ -149,13 +238,24 @@ uploaded = st.file_uploader(
     on_change=reset_state,
 )
 
+# Determine if the evaluate button should be disabled
+can_evaluate = (
+    uploaded is not None
+    and rubric.strip()
+    and api_configured()
+    and len(st.session_state.teacher_images) > 0
+)
+
 col_eval, col_space = st.columns([1, 5])
 with col_eval:
     evaluate = st.button(
         "Evaluate Paper",
         type="primary",
-        disabled=not (uploaded is not None and rubric.strip() and api_configured()),
-        help="Requires an image, a rubric, and a configured API key.",
+        disabled=not can_evaluate,
+        help=(
+            "Requires: student image, marking rubric, configured API key, "
+            "and at least one teacher answer key image."
+        ),
     )
 
 # ---------------------------------------------------------------------------
@@ -172,8 +272,10 @@ if evaluate:
             image=image,
             topic=topic or "(not specified)",
             rubric=rubric,
+            exam_type=exam_type,
+            question_marks=question_marks,
             teacher_images=st.session_state.teacher_images or None,
-            max_score=max_score,
+            max_score=total_marks,
         )
         st.session_state.result = result
     except Exception as exc:  # noqa: BLE001 - surface any error to the user
@@ -201,12 +303,12 @@ if st.session_state.result:
     # Metric cards
     m1, m2, m3 = st.columns(3)
     with m1:
-        st.metric("Score", f"{result.get('score', 0)}")
+        st.metric("Score", f"{result.get('total_score', 0)}")
     with m2:
-        st.metric("Max Score", f"{result.get('max_score', max_score)}")
+        st.metric("Max Score", f"{result.get('max_score', total_marks)}")
     with m3:
-        max_s = result.get("max_score", max_score) or 1
-        pct = (result.get("score", 0) / max_s) * 100 if max_s else 0
+        max_s = result.get("max_score", total_marks) or 1
+        pct = (result.get("total_score", 0) / max_s) * 100 if max_s else 0
         st.metric("Percentage", f"{pct:.0f}%")
 
     st.divider()
@@ -220,25 +322,58 @@ if st.session_state.result:
         st.write(result.get("extracted_text", "_(none)_"))
 
     with tab_breakdown:
-        st.write("**Points answered correctly:**")
-        correct = result.get("points_correct", []) or []
-        if correct:
-            for pt in correct:
-                st.write(f"• {pt}")
-        else:
-            st.write("_None listed._")
+        st.write(f"**Exam Type:** {result.get('exam_type', 'theory').title()}")
+        st.write("**Per-Question Breakdown:**")
 
-        st.write("**Points missed or incorrect:**")
-        missed = result.get("points_missed", []) or []
-        if missed:
-            for pt in missed:
-                st.write(f"• {pt}")
+        breakdown = result.get("question_breakdown", []) or []
+        if breakdown:
+            for q in breakdown:
+                qn = q.get("question_number", "?")
+                marks_awarded = q.get("marks_awarded", 0)
+                max_marks = q.get("max_marks", 0)
+
+                # Status indicator based on exam type
+                if result.get("exam_type") == "objective":
+                    is_correct = q.get("is_correct", False)
+                    status = "✅ Correct" if is_correct else "❌ Incorrect"
+                else:
+                    closeness = q.get("closeness", "")
+                    status_map = {
+                        "exact": "✅ Exact",
+                        "close": "🟡 Close",
+                        "partial": "🟠 Partial",
+                        "incorrect": "❌ Incorrect",
+                        "off-topic": "🔴 Off-topic",
+                    }
+                    status = status_map.get(closeness, f"• {closeness}")
+
+                with st.container():
+                    col_q, col_marks = st.columns([4, 1])
+                    with col_q:
+                        st.markdown(
+                            f"**Q{qn}** — {status} — "
+                            f"**{marks_awarded}/{max_marks} marks**"
+                        )
+                        student_ans = q.get("student_answer", "")
+                        if student_ans:
+                            st.caption(f"Student: {student_ans}")
+                        ref_ans = q.get("correct_answer") or q.get(
+                            "reference_answer", ""
+                        )
+                        if ref_ans:
+                            st.caption(f"Reference: {ref_ans}")
+                        q_feedback = q.get("feedback", "")
+                        if q_feedback:
+                            st.caption(f"Feedback: {q_feedback}")
+                    with col_marks:
+                        st.metric("Awarded", f"{marks_awarded}")
+                    st.divider()
         else:
-            st.write("_None listed._")
+            st.info("No per-question breakdown returned.")
 
     with tab_feedback:
         st.write("**Constructive feedback for the student:**")
-        st.info(result.get("feedback", "_(none)_"))
+        st.info(result.get("overall_feedback", "_(none)_"))
 
     st.divider()
 

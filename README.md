@@ -64,13 +64,52 @@ Then open http://localhost:8501 in your browser.
 ## Features
 
 - **Handwritten transcription** — Gemma multimodal model transcribes student answers from uploaded JPEG/PNG images.
+- **Two exam types:**
+  - **Objective** — Binary grading: correct answer = full marks, incorrect/blank = zero marks. No partial credit.
+  - **Theory** — Partial credit allowed: AI assesses how close the student's answer is to the teacher's marking guide (exact, close, partial, incorrect, off-topic) and awards marks proportionally — never requiring word-for-word matching.
+- **Per-question marks** — Teacher specifies how many marks each question carries (single value or comma-separated list per question).
+- **Teacher answer key / marking guide** — Upload your own completed answer sheet image(s); the AI uses them as the authoritative reference for grading.
 - **Rubric-based grading** — Compares the transcribed answer against a teacher-provided marking rubric and assigns a numerical score.
-- **Constructive feedback** — Generates encouraging, student-facing feedback plus a list of points correct and points missed.
+- **Constructive feedback** — Generates encouraging, student-facing feedback plus per-question breakdown.
 - **Results dashboard** — View the original image alongside extracted text, score breakdown, and detailed feedback.
 - **Export results** — Download graded results as JSON for record-keeping.
 - **Open source** — Public GitHub repository welcoming Hacktoberfest contributions.
 
 ---
+
+## Exam Types
+
+### Objective Exams
+
+Best for multiple-choice, fill-in-the-blank, or short-answer questions.
+
+- The teacher specifies how many marks each question carries.
+- A correct answer earns the **full marks** for that question.
+- An incorrect, blank, or unreadable answer earns **zero marks**.
+- No partial credit is awarded.
+
+### Theory Exams
+
+Best for essay, structured, or descriptive questions.
+
+- The teacher specifies how many marks each question carries.
+- The AI assesses how **close** the student's answer is to the teacher's marking guide:
+  - **Exact / fully correct** → full marks
+  - **Close** (minor omission) → near-full marks (e.g., 80–90%)
+  - **Partial** (some relevant points) → partial marks (e.g., 40–60%)
+  - **Incorrect / off-topic** → zero marks
+- Answers are **not** required to match word-for-word; partial credit is awarded fairly.
+
+### Setting Marks per Question
+
+In the sidebar, under "Question Configuration":
+
+- Enter the **Number of Questions**.
+- Enter **Marks per Question** as either:
+  - A single number (e.g. `2`) applied to all questions, or
+  - A comma-separated list (e.g. `2,3,2,5,3`) with one value per question in order.
+
+The total maximum score is calculated automatically.
 
 ## Tech Stack
 
