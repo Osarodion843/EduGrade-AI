@@ -73,8 +73,10 @@ class GemmaHelper:
             teacher_key_section = (
                 "\nTEACHER'S ANSWER KEY (REFERENCE - AUTHORITATIVE):\n"
                 "One or more images of the teacher's own completed objective "
-                "answer sheet are provided. Use these as the definitive source "
-                "for the correct answer to each objective question.\n"
+                "answer sheet are provided (showing handwritten answers such as "
+                "A, B, C, D for each question number). Use these as the "
+                "definitive source for the correct answer to each objective "
+                "question.\n"
             )
 
         qm_section = self._format_question_marks(question_marks)
@@ -92,12 +94,13 @@ class GemmaHelper:
             f"TOTAL MAXIMUM SCORE: {total_marks}\n\n"
             "TASK:\n"
             "1. Transcribe the student's handwritten answer for EACH question from "
-            "the image as accurately as possible.\n"
-            "2. For each objective question, compare the student's answer against "
-            "the teacher's answer key and the marking rubric.\n"
+            "the image as accurately as possible (e.g., Q1: C, Q2: A).\n"
+            "2. For each objective question, compare the student's handwritten "
+            "letter answer (A/B/C/D or similar) against the teacher's answer key "
+            "and the marking rubric.\n"
             "3. OBJECTIVE GRADING RULE (strict binary):\n"
-            "   - If the student's answer is CORRECT -> award the FULL marks for "
-            "that question.\n"
+            "   - If the student's answer matches the correct answer -> award the "
+            "FULL marks for that question.\n"
             "   - If the student's answer is INCORRECT, blank, or unreadable -> "
             "award ZERO marks for that question.\n"
             "   - There is NO partial credit for objective questions.\n"
@@ -113,8 +116,8 @@ class GemmaHelper:
             '  "question_breakdown": [\n'
             "    {\n"
             '      "question_number": <integer>,\n'
-            '      "student_answer": "<transcribed answer>",\n'
-            '      "correct_answer": "<correct answer from teacher key>",\n'
+            '      "student_answer": "<transcribed answer letter>",\n'
+            '      "correct_answer": "<correct answer letter from teacher key>",\n'
             '      "is_correct": <true/false>,\n'
             '      "marks_awarded": <number>,\n'
             '      "max_marks": <number>,\n'
