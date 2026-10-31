@@ -37,6 +37,8 @@ if "evaluating" not in st.session_state:
     st.session_state.evaluating = False
 if "error" not in st.session_state:
     st.session_state.error: Optional[str] = None
+if "teacher_images" not in st.session_state:
+    st.session_state.teacher_images: list[Image.Image] = []
 
 
 # ---------------------------------------------------------------------------
@@ -96,6 +98,39 @@ with st.sidebar:
     )
 
     st.divider()
+
+    st.subheader("📚 Teacher Answer Key (Optional)")
+    st.caption(
+        "Upload your own completed answer sheet image(s). Student papers will "
+        "be graded against these as the authoritative reference."
+    )
+    teacher_uploads = st.file_uploader(
+        "Upload teacher answer sheet(s) (JPEG/PNG)",
+        type=["jpg", "jpeg", "png"],
+        accept_multiple_files=True,
+        on_change=reset_state,
+    )
+
+    # Convert uploaded files to PIL images and store in session state
+    if teacher_uploads:
+        new_images: list[Image.Image] = []
+        for uploaded_file in teacher_uploads:
+            try:
+                img = Image.open(uploaded_file).convert("RGB")
+                new_images.append(img)
+            except Exception:
+                pass
+        st.session_state.teacher_images = new_images
+    else:
+        st.session_state.teacher_images = []
+
+    if st.session_state.teacher_images:
+        st.info(
+            f"{len(st.session_state.teacher_images)} teacher answer key "
+            "image(s) loaded."
+        )
+
+    st.divider()
     st.caption("EduGrade AI • Open source for Hacktoberfest")
 
 # ---------------------------------------------------------------------------
@@ -137,6 +172,7 @@ if evaluate:
             image=image,
             topic=topic or "(not specified)",
             rubric=rubric,
+            teacher_images=st.session_state.teacher_images or None,
             max_score=max_score,
         )
         st.session_state.result = result

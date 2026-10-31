@@ -49,23 +49,38 @@ class GemmaHelper:
     # Prompt template
     # ------------------------------------------------------------------
 
-    def _build_prompt(self, topic: str, rubric: str) -> str:
+    def _build_prompt(
+        self, topic: str, rubric: str, has_teacher_key: bool = False
+    ) -> str:
         """Construct the multimodal prompt sent to Gemma.
 
-        The image is appended separately by the caller via the GenAI SDK's
+        The image(s) are appended separately by the caller via the GenAI SDK's
         multi-part content support. This returns the text portion that
-        instructs the model on what to do with the image.
+        instructs the model on what to do with the images.
         """
+        teacher_key_section = ""
+        if has_teacher_key:
+            teacher_key_section = (
+                "\nTEACHER'S ANSWER KEY (REFERENCE):\n"
+                "One or more images of the teacher's own completed answer sheet "
+                "are provided alongside the student's sheet. Use the teacher's "
+                "key as the authoritative reference for what constitutes a correct "
+                "answer. Cross-check the student's transcription against the "
+                "teacher's key before scoring.\n"
+            )
+
         return (
             "You are an experienced teacher grading a handwritten answer sheet. "
             "Follow these steps exactly and return ONLY a valid JSON object "
             "(no markdown fences, no extra text).\n\n"
             f"ASSIGNMENT TOPIC: {topic}\n\n"
             f"MARKING RUBRIC:\n{rubric}\n\n"
+            f"{teacher_key_section}"
             "TASK:\n"
             "1. Transcribe the student's handwritten answer from the image as "
             "accurately as possible (preserve the original wording where legible).\n"
-            "2. Compare the transcribed answer against the marking rubric above.\n"
+            "2. Compare the transcribed answer against the marking rubric above, "
+            "and against the teacher's answer key if one is provided.\n"
             "3. Assign a numerical score (0 to the rubric's maximum).\n"
             "4. List key points the student answered correctly.\n"
             "5. List key points missed or answered incorrectly.\n"
@@ -90,6 +105,7 @@ class GemmaHelper:
         image: Image.Image,
         topic: str,
         rubric: str,
+        teacher_images: Optional[list[Image.Image]] = None,
         max_score: Optional[float] = None,
     ) -> Dict[str, Any]:
         """Evaluate a handwritten answer-sheet image against a rubric.
@@ -98,17 +114,26 @@ class GemmaHelper:
             image: PIL Image of the student's handwritten paper.
             topic: Assignment topic / subject.
             rubric: Teacher-provided marking rubric text.
+            teacher_images: Optional list of PIL Images of the teacher's own
+                completed answer sheet(s), used as the authoritative answer key.
             max_score: Optional override for the maximum possible score.
 
         Returns:
             Parsed JSON dict with keys: extracted_text, score, max_score,
             points_correct, points_missed, feedback.
         """
-        prompt = self._build_prompt(topic, rubric)
+        prompt = self._build_prompt(
+            topic, rubric, has_teacher_key=bool(teacher_images)
+        )
+
+        contents: list[Any] = [prompt]
+        if teacher_images:
+            contents.extend(teacher_images)
+        contents.append(image)
 
         response = self.client.models.generate_content(
             model=self.model,
-            contents=[prompt, image],
+            contents=contents,
         )
 
         raw_text = getattr(response, "text", "") or ""
