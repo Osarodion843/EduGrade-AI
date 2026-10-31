@@ -27,7 +27,7 @@ from PIL import Image
 load_dotenv()
 
 GEMMA_API_KEY: Optional[str] = os.getenv("GEMMA_API_KEY")
-GEMMA_MODEL: str = os.getenv("GEMMA_MODEL", "gemma-3")
+GEMMA_MODEL: str = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")
 
 
 class GemmaHelper:
