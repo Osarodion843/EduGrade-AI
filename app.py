@@ -45,16 +45,16 @@ THEME_CSS_LIGHT = """
     --edu-bg-secondary: #f8fafc;
     --edu-bg-tertiary: #f1f5f9;
     --edu-text-primary: #0f172a;
-    --edu-text-secondary: #475569;
+    --edu-text-secondary: #334155;
     --edu-text-muted: #64748b;
-    --edu-accent: #3b82f6;
-    --edu-accent-hover: #2563eb;
+    --edu-accent: #2563eb;
+    --edu-accent-hover: #1d4ed8;
     --edu-success: #10b981;
     --edu-success-bg: #d1fae5;
     --edu-warning: #f59e0b;
     --edu-warning-bg: #fef3c7;
     --edu-danger: #ef4444;
-    --edu-border: #e2e8f0;
+    --edu-border: #cbd5e1;
     --edu-card-bg: #ffffff;
     --edu-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
@@ -113,7 +113,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .edu-metric-label {
     font-size: 0.875rem;
-    color: var(--edu-text-muted);
+    color: var(--edu-text-secondary);
     margin-top: 0.25rem;
 }
 
@@ -187,6 +187,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
+    color: var(--edu-text-primary);
 }
 
 .edu-question-row {
@@ -218,6 +219,11 @@ input, textarea, select {
     border: 1px solid var(--edu-border) !important;
 }
 
+input::placeholder, textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1 !important;
+}
+
 .stButton > button {
     background: var(--edu-accent);
     color: white;
@@ -244,9 +250,14 @@ input, textarea, select {
     color: var(--edu-text-primary);
 }
 
+.stMetric [data-testid="stMetricLabel"] {
+    color: var(--edu-text-secondary) !important;
+}
+
 .stAlert {
     background: var(--edu-card-bg);
     border: 1px solid var(--edu-border);
+    color: var(--edu-text-primary);
 }
 
 .stFileUploader > div {
@@ -257,6 +268,22 @@ input, textarea, select {
 
 .stFileUploader > div:hover {
     border-color: var(--edu-accent);
+}
+
+.stRadio > div {
+    color: var(--edu-text-primary);
+}
+
+.stRadio label {
+    color: var(--edu-text-primary) !important;
+}
+
+.stTextInput > div > div > input {
+    color: var(--edu-text-primary) !important;
+}
+
+.stTextArea > div > div > textarea {
+    color: var(--edu-text-primary) !important;
 }
 </style>
 """
