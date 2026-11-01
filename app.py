@@ -42,7 +42,7 @@ THEME_CSS_LIGHT = """
 <style>
 :root {
     --edu-bg-primary: #ffffff;
-    --edu-bg-secondary: #f8fafc;
+    --edu-bg-secondary: #f1f5f9;
     --edu-bg-tertiary: #f1f5f9;
     --edu-text-primary: #0f172a;
     --edu-text-secondary: #334155;
@@ -88,11 +88,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-card {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: var(--edu-shadow);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     margin-bottom: 1rem;
 }
 
@@ -107,12 +107,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-metric-card {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 10px;
     padding: 1.25rem;
     text-align: center;
-    box-shadow: var(--edu-shadow);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .edu-metric-value {
@@ -181,8 +181,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-split-panel {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 10px;
     padding: 1rem;
     height: 100%;
@@ -191,25 +191,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-feedback-box {
-    background: #f8fafc;
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #cbd5e1;
     border-left: 4px solid var(--edu-accent);
     border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
     color: var(--edu-text-primary);
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.05);
 }
 
 .edu-question-row {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    border-bottom: 1px solid var(--edu-border);
-}
-
-.edu-question-row:last-child {
-    border-bottom: none;
+    margin-bottom: 0.5rem;
 }
 
 .edu-q-number {
@@ -387,11 +387,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-card {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: var(--edu-shadow);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     margin-bottom: 1rem;
 }
 
@@ -406,12 +406,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-metric-card {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 10px;
     padding: 1.25rem;
     text-align: center;
-    box-shadow: var(--edu-shadow);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .edu-metric-value {
@@ -480,8 +480,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-split-panel {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
+    background: #ffffff;
+    border: 2px solid #94a3b8;
     border-radius: 10px;
     padding: 1rem;
     height: 100%;
@@ -500,15 +500,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-question-row {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    border-bottom: 1px solid var(--edu-border);
-}
-
-.edu-question-row:last-child {
-    border-bottom: none;
+    margin-bottom: 0.5rem;
 }
 
 .edu-q-number {
