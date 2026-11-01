@@ -59,8 +59,18 @@ THEME_CSS_LIGHT = """
     --edu-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 
-.stApp {
-    background-color: var(--edu-bg-secondary);
+/* Force light mode on everything */
+.stApp, .stApp * {
+    background-color: var(--edu-bg-secondary) !important;
+    color: var(--edu-text-primary) !important;
+}
+
+[data-testid="stSidebar"],
+[data-testid="stSidebarContent"],
+.stSidebar,
+.stSidebar * {
+    background-color: var(--edu-bg-tertiary) !important;
+    color: var(--edu-text-primary) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -213,17 +223,31 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
-input, textarea, select {
-    background-color: var(--edu-bg-primary) !important;
-    color: var(--edu-text-primary) !important;
-    border: 1px solid var(--edu-border) !important;
+/* Input fields - force dark text on light background */
+input, textarea, select,
+.stTextInput input,
+.stTextArea textarea,
+.stNumberInput input,
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea,
+[data-testid="stNumberInput"] input {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
 }
 
 input::placeholder, textarea::placeholder {
-    color: #94a3b8 !important;
+    color: #64748b !important;
     opacity: 1 !important;
 }
 
+/* Labels */
+label, .stLabel, [data-testid="stWidgetLabel"] p {
+    color: #0f172a !important;
+    font-weight: 500 !important;
+}
+
+/* Buttons */
 .stButton > button {
     background: var(--edu-accent);
     color: white;
@@ -238,6 +262,7 @@ input::placeholder, textarea::placeholder {
     background: var(--edu-accent-hover);
 }
 
+/* Metrics */
 .stMetric {
     background: var(--edu-card-bg);
     border: 1px solid var(--edu-border);
@@ -254,12 +279,18 @@ input::placeholder, textarea::placeholder {
     color: var(--edu-text-secondary) !important;
 }
 
+.stMetric [data-testid="stMetricValue"] {
+    color: var(--edu-accent) !important;
+}
+
+/* Alerts */
 .stAlert {
     background: var(--edu-card-bg);
     border: 1px solid var(--edu-border);
     color: var(--edu-text-primary);
 }
 
+/* File uploader */
 .stFileUploader > div {
     background: var(--edu-bg-tertiary);
     border: 2px dashed var(--edu-border);
@@ -270,6 +301,7 @@ input::placeholder, textarea::placeholder {
     border-color: var(--edu-accent);
 }
 
+/* Radio buttons */
 .stRadio > div {
     color: var(--edu-text-primary);
 }
@@ -278,11 +310,38 @@ input::placeholder, textarea::placeholder {
     color: var(--edu-text-primary) !important;
 }
 
-.stTextInput > div > div > input {
-    color: var(--edu-text-primary) !important;
+/* Select boxes */
+.stSelectbox > div > div {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
 }
 
-.stTextArea > div > div > textarea {
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    background-color: var(--edu-bg-tertiary) !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    color: var(--edu-text-secondary) !important;
+}
+
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: var(--edu-accent) !important;
+}
+
+/* Divider */
+hr, .stDivider {
+    border-color: var(--edu-border) !important;
+}
+
+/* Caption text */
+.stCaption, .stCaption p {
+    color: var(--edu-text-secondary) !important;
+}
+
+/* Info/warning/error boxes */
+.stAlert > div {
     color: var(--edu-text-primary) !important;
 }
 </style>
@@ -509,6 +568,65 @@ input, textarea, select {
 
 .stFileUploader > div:hover {
     border-color: var(--edu-accent);
+}
+
+/* Input fields - force light text on dark background */
+input, textarea, select,
+.stTextInput input,
+.stTextArea textarea,
+.stNumberInput input,
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea,
+[data-testid="stNumberInput"] input {
+    background-color: var(--edu-bg-primary) !important;
+    color: var(--edu-text-primary) !important;
+    border: 1px solid var(--edu-border) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1 !important;
+}
+
+/* Labels */
+label, .stLabel, [data-testid="stWidgetLabel"] p {
+    color: var(--edu-text-primary) !important;
+    font-weight: 500 !important;
+}
+
+/* Select boxes */
+.stSelectbox > div > div {
+    background-color: var(--edu-bg-primary) !important;
+    color: var(--edu-text-primary) !important;
+    border: 1px solid var(--edu-border) !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    background-color: var(--edu-bg-tertiary) !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    color: var(--edu-text-secondary) !important;
+}
+
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: var(--edu-accent) !important;
+}
+
+/* Divider */
+hr, .stDivider {
+    border-color: var(--edu-border) !important;
+}
+
+/* Caption text */
+.stCaption, .stCaption p {
+    color: var(--edu-text-secondary) !important;
+}
+
+/* Info/warning/error boxes */
+.stAlert > div {
+    color: var(--edu-text-primary) !important;
 }
 </style>
 """
