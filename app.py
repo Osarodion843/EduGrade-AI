@@ -233,7 +233,8 @@ input, textarea, select,
 [data-testid="stNumberInput"] input {
     background-color: #ffffff !important;
     color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 8px !important;
 }
 
 input::placeholder, textarea::placeholder {
@@ -244,105 +245,125 @@ input::placeholder, textarea::placeholder {
 /* Labels */
 label, .stLabel, [data-testid="stWidgetLabel"] p {
     color: #0f172a !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
 }
 
 /* Buttons */
 .stButton > button {
-    background: var(--edu-accent);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    width: 100%;
+    background: #2563eb !important;
+    color: white !important;
+    border: 2px solid #1d4ed8 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.625rem 1.5rem !important;
+    width: 100% !important;
 }
 
 .stButton > button:hover {
-    background: var(--edu-accent-hover);
+    background: #1d4ed8 !important;
+    border-color: #1e40af !important;
 }
 
 /* Metrics */
 .stMetric {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: var(--edu-shadow);
+    background: #ffffff !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 .stMetric > div {
-    color: var(--edu-text-primary);
+    color: #0f172a !important;
 }
 
 .stMetric [data-testid="stMetricLabel"] {
-    color: var(--edu-text-secondary) !important;
+    color: #334155 !important;
 }
 
 .stMetric [data-testid="stMetricValue"] {
-    color: var(--edu-accent) !important;
+    color: #2563eb !important;
 }
 
 /* Alerts */
 .stAlert {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
-    color: var(--edu-text-primary);
+    background: #ffffff !important;
+    border: 2px solid #94a3b8 !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 /* File uploader */
 .stFileUploader > div {
-    background: var(--edu-bg-tertiary);
-    border: 2px dashed var(--edu-border);
-    border-radius: 10px;
+    background: #f8fafc !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
 }
 
 .stFileUploader > div:hover {
-    border-color: var(--edu-accent);
+    border-color: #2563eb !important;
+    background: #f1f5f9 !important;
 }
 
 /* Radio buttons */
 .stRadio > div {
-    color: var(--edu-text-primary);
+    color: #0f172a !important;
 }
 
 .stRadio label {
-    color: var(--edu-text-primary) !important;
+    color: #0f172a !important;
+    font-weight: 500 !important;
 }
 
 /* Select boxes */
 .stSelectbox > div > div {
     background-color: #ffffff !important;
     color: #0f172a !important;
-    border: 1px solid #cbd5e1 !important;
+    border: 2px solid #94a3b8 !important;
+    border-radius: 8px !important;
 }
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
-    background-color: var(--edu-bg-tertiary) !important;
+    background-color: #f1f5f9 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
 }
 
 .stTabs [data-baseweb="tab"] {
-    color: var(--edu-text-secondary) !important;
+    color: #334155 !important;
 }
 
 .stTabs [data-baseweb="tab"][aria-selected="true"] {
-    color: var(--edu-accent) !important;
+    color: #2563eb !important;
+    border-bottom: 2px solid #2563eb !important;
 }
 
 /* Divider */
 hr, .stDivider {
-    border-color: var(--edu-border) !important;
+    border-color: #cbd5e1 !important;
+    border-width: 2px !important;
 }
 
 /* Caption text */
 .stCaption, .stCaption p {
-    color: var(--edu-text-secondary) !important;
+    color: #334155 !important;
 }
 
 /* Info/warning/error boxes */
 .stAlert > div {
-    color: var(--edu-text-primary) !important;
+    color: #0f172a !important;
+}
+
+/* Container for the main app */
+[data-testid="stAppViewContainer"] {
+    background-color: #f8fafc !important;
+}
+
+/* Main container */
+.block-container {
+    background-color: #f8fafc !important;
+    padding-top: 2rem !important;
 }
 </style>
 """
@@ -464,50 +485,51 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .edu-progress-tracker {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
-    border-radius: 10px;
-    padding: 1rem;
-    margin-top: 1rem;
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    margin-top: 1rem !important;
 }
 
 .edu-progress-label {
     font-size: 0.875rem;
-    color: var(--edu-text-secondary);
-    margin-bottom: 0.5rem;
+    color: #94a3b8 !important;
+    margin-bottom: 0.5rem !important;
     display: flex;
     justify-content: space-between;
 }
 
 .edu-split-panel {
-    background: #ffffff;
-    border: 2px solid #94a3b8;
-    border-radius: 10px;
-    padding: 1rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .edu-feedback-box {
-    background: var(--edu-bg-tertiary);
-    border: 1px solid var(--edu-border);
-    border-left: 4px solid var(--edu-accent);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 1rem;
-    color: var(--edu-text-primary);
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-left: 4px solid var(--edu-accent) !important;
+    border-radius: 8px !important;
+    padding: 1rem !important;
+    margin-top: 1rem !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.3) !important;
 }
 
 .edu-question-row {
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .edu-q-number {
@@ -522,51 +544,122 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 input, textarea, select {
-    background-color: var(--edu-bg-primary) !important;
-    color: var(--edu-text-primary) !important;
-    border: 1px solid var(--edu-border) !important;
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border: 2px solid #334155 !important;
+    border-radius: 8px !important;
 }
 
+input::placeholder, textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1 !important;
+}
+
+/* Buttons */
 .stButton > button {
-    background: var(--edu-accent);
-    color: #0f172a;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    width: 100%;
+    background: #60a5fa !important;
+    color: #0f172a !important;
+    border: 2px solid #3b82f6 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 0.625rem 1.5rem !important;
+    width: 100% !important;
 }
 
 .stButton > button:hover {
-    background: var(--edu-accent-hover);
+    background: #3b82f6 !important;
+    border-color: #2563eb !important;
 }
 
+/* Metrics */
 .stMetric {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
-    border-radius: 10px;
-    padding: 1rem;
-    box-shadow: var(--edu-shadow);
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2) !important;
 }
 
 .stMetric > div {
-    color: var(--edu-text-primary);
+    color: #f1f5f9 !important;
 }
 
+.stMetric [data-testid="stMetricLabel"] {
+    color: #94a3b8 !important;
+}
+
+.stMetric [data-testid="stMetricValue"] {
+    color: #60a5fa !important;
+}
+
+/* Alerts */
 .stAlert {
-    background: var(--edu-card-bg);
-    border: 1px solid var(--edu-border);
-    color: var(--edu-text-primary);
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    color: #f1f5f9 !important;
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.3) !important;
 }
 
+/* File uploader */
 .stFileUploader > div {
-    background: var(--edu-bg-tertiary);
-    border: 2px dashed var(--edu-border);
-    border-radius: 10px;
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
 }
 
 .stFileUploader > div:hover {
-    border-color: var(--edu-accent);
+    border-color: #60a5fa !important;
+    background: #0f172a !important;
+}
+
+/* Radio buttons */
+.stRadio > div {
+    color: #f1f5f9 !important;
+}
+
+.stRadio label {
+    color: #f1f5f9 !important;
+    font-weight: 500 !important;
+}
+
+/* Select boxes */
+.stSelectbox > div > div {
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border: 2px solid #334155 !important;
+    border-radius: 8px !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    background-color: #1e293b !important;
+    border-bottom: 2px solid #334155 !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    color: #94a3b8 !important;
+}
+
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: #60a5fa !important;
+    border-bottom: 2px solid #60a5fa !important;
+}
+
+/* Divider */
+hr, .stDivider {
+    border-color: #334155 !important;
+    border-width: 2px !important;
+}
+
+/* Caption text */
+.stCaption, .stCaption p {
+    color: #94a3b8 !important;
+}
+
+/* Info/warning/error boxes */
+.stAlert > div {
+    color: #f1f5f9 !important;
 }
 
 /* Input fields - force light text on dark background */
@@ -577,9 +670,9 @@ input, textarea, select,
 [data-testid="stTextInput"] input,
 [data-testid="stTextArea"] textarea,
 [data-testid="stNumberInput"] input {
-    background-color: var(--edu-bg-primary) !important;
-    color: var(--edu-text-primary) !important;
-    border: 1px solid var(--edu-border) !important;
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
+    border: 2px solid #334155 !important;
 }
 
 input::placeholder, textarea::placeholder {
