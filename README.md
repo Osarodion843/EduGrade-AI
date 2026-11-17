@@ -72,7 +72,8 @@ Then open http://localhost:8501 in your browser.
 - **Rubric-based grading** — Compares the transcribed answer against a teacher-provided marking rubric and assigns a numerical score.
 - **Constructive feedback** — Generates encouraging, student-facing feedback plus per-question breakdown.
 - **Results dashboard** — View the original image alongside extracted text, score breakdown, and detailed feedback.
-- **Export results** — Download graded results as JSON for record-keeping.
+- **Student PDF report** — Download a printable report card per student: details, score, letter grade, per-question marks table, feedback, signature lines, and (optionally) the scanned answer sheet.
+- **JSON export** — Download the raw graded result for record-keeping.
 - **Open source** — Public GitHub repository welcoming Hacktoberfest contributions.
 
 ---
@@ -118,6 +119,7 @@ The total maximum score is calculated automatically.
 | Frontend/UI | [Streamlit](https://streamlit.io) (Python) |
 | AI Engine | [Google Gemma](https://ai.google.dev/gemma) via [Google GenAI SDK](https://github.com/googleapis/python-genai) |
 | Image handling | [Pillow](https://python-pillow.org) |
+| PDF reports | [fpdf2](https://py-pdf.github.io/fpdf2/) |
 | Config | `python-dotenv` (environment variables via `.env`) |
 | Version control | Git & GitHub (public, Hacktoberfest-friendly) |
 
@@ -129,6 +131,8 @@ The total maximum score is calculated automatically.
 edugrade-ai/
 ├── app.py                 # Streamlit frontend
 ├── gemma_helper.py        # Gemma multimodal evaluation helper
+├── theme.py               # Light/dark theme CSS and toggle
+├── pdf_report.py          # Student result PDF generator (fpdf2)
 ├── requirements.txt       # Python dependencies
 ├── .env                   # API keys (gitignored — never commit)
 ├── .env.example           # Example environment file (commit this)
@@ -136,8 +140,8 @@ edugrade-ai/
 ├── LICENSE                # MIT license
 ├── README.md              # This file
 ├── CONTRIBUTING.md        # Contribution guidelines
-└── implementation_plan.md # Original implementation roadmap
-├── product_requirement_document_prd.md # Product requirements
+├── implementation_plan.md # Original implementation roadmap
+└── product_requirement_document_prd.md # Product requirements
 ```
 
 > ⚠️ **Security:** Never commit your `.env` file. It contains your `GEMMA_API_KEY`. The repo's `.gitignore` already excludes it. Use `.env.example` to document required variables without exposing secrets.
@@ -185,14 +189,14 @@ streamlit run app.py
 
 ## Usage
 
-1. **Sidebar:** Enter Subject, Topic, Maximum Score, and paste your Marking Rubric.
-2. **Main panel:** Upload a photo (JPEG/PNG) of the student's handwritten answer sheet.
-3. Click **Evaluate Paper**.
-4. View results across three tabs:
-   - **Extracted Text** — the model's transcription of the handwriting.
-   - **Detailed Breakdown** — points correct and points missed.
-   - **Student Feedback** — encouraging, constructive feedback.
-5. Click **Download result (JSON)** to save the graded output.
+1. **Sidebar:** Enter Subject, Class and Topic, choose the exam type, set the marks for each question, optionally add marking instructions, and upload your answer key image(s).
+2. **Main panel:** Enter the student's name (and optional ID), then snap or upload a photo (JPEG/PNG) of their handwritten answer sheet.
+3. Click **Evaluate paper**.
+4. Review the result: score, percentage and grade; the source image beside the AI output; and the **Extracted text**, **Detailed breakdown** and **Student feedback** tabs.
+5. Click **Download student report (PDF)** for a printable report card (named after the student, e.g. `chidinma_okafor_result.pdf`), or **Download result (JSON)** for the raw data.
+6. Click **Grade another paper** to move to the next student. The session dashboard tracks how many papers you've graded and the class average.
+
+> Letter grades use a common West African scale: A ≥ 70%, B ≥ 60%, C ≥ 50%, D ≥ 45%, E ≥ 40%, F < 40%. Change `GRADE_SCALE` in `pdf_report.py` to match your school.
 
 ---
 
